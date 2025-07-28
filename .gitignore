@@ -3,3 +3,4 @@
 *.cmo
 *.log
 *.cache
+.venv/
