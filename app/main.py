@@ -5,13 +5,13 @@ app = Flask(__name__)
 
 @app.route("/marina")
 def run_marina():
-    formula = request.args.get("formula")
-    if not formula:
-        return jsonify({"error": "Missing 'formula' parameter"}), 400
+    laza = request.args.get("laza")
+    if not laza:
+        return jsonify({"error": "Missing 'laza' parameter"}), 400
 
     try:
         # Consider validating 'formula' here
-        result = subprocess.check_output(["./marina", formula], stderr=subprocess.STDOUT)
+        result = subprocess.check_output(["./marina", laza], stderr=subprocess.STDOUT)
         return jsonify({"result": result.decode().strip()})
     except subprocess.CalledProcessError as e:
         return jsonify({"error": e.output.decode()}), 500
