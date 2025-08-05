@@ -1,6 +1,9 @@
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y make ocaml opam && rm -rf /var/lib/apt/lists/*
+# Install OCaml build deps
+RUN apt-get update && \
+    apt-get install -y make ocaml opam && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -16,15 +19,8 @@ RUN python3 -m venv /opt/venv && \
     pip install --upgrade pip && \
     pip install -r app/requirements.txt
 
-FROM gcr.io/distroless/python3
-
-COPY --from=builder /app /app
-COPY --from=builder /opt/venv /opt/venv
-
 ENV PATH="/opt/venv/bin:$PATH"
-
-WORKDIR /app
 
 EXPOSE 8080
 
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "main:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app.main:app"]
